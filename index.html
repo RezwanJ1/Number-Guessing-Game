@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+           * {
+            margin: 0;
+            padding: 0;
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+           }
+           
+           body {
+            background-color: rgb(30, 37, 16);
+            height:100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+           }
+
+           div {
+            width: 1000px;
+            height: 600px;
+            background-color: rgb(122, 122, 57);
+            display: flex;
+            align-items: center;
+            justify-content:space-around;
+            flex-direction: column;
+            border-radius: 30px;
+            font-size: xx-large;
+            border: 15px double rgb(27, 49, 27);
+           }
+
+           #GuessBox {
+            border: 15px double rgb(27, 49, 27);
+            border-radius: 30px;
+            padding:3%;
+            font-size: xx-large;
+           }
+
+           #Difficulty ul {
+             width: 750px;
+             border-radius: 15px;
+             list-style-type: none;
+             display: flex;
+             align-items: center;
+             justify-content:space-evenly;
+             background-color: rgb(10, 44, 17);
+             border: 15px double rgb(27, 49, 27);
+             filter: brightness(1);
+             padding: 2% 0;
+           }
+
+           #Difficulty ul li {
+            border-radius: 15px;
+            padding:1% 5%;
+            transition: all 0.1s ease-in;
+           }
+
+             #Difficulty ul li:hover {
+            border-radius: 20px;
+            filter: brightness(0.5);
+            transition: all 0.1s ease-in;
+           } 
+
+           #Difficulty ul li:nth-child(1) {
+             background-color: green;
+           }
+           #Difficulty ul li:nth-child(2) {
+             background-color: orange;
+           }
+           #Difficulty ul li:nth-child(3) {
+             background-color: red;
+           }
+
+    </style>
+    <title>Guessing game</title>
+</head>
+<body>
+    <main>
+        <div>
+        <h1>Number Guessing!</h1>
+        <label for="GuessBox" id="GuessRangeText">pick a number between 0-10</label>
+        <input type="number" placeholder="your guess" id="GuessBox"></input>
+        <h6 id="ScaleText"></h6>
+        <p id="Guesses">Guesses remaining:10</p>
+        <aside id="Difficulty">
+            <ul>
+                <li onclick="changeDiff(this)">ez pz</li>
+                <li onclick="changeDiff(this)">Test</li>
+                <li onclick="changeDiff(this)">Decoder</li>
+            </ul>
+        </aside>
+        </div>
+    </main>
+    <script>
+           const GuessBox = document.getElementById("GuessBox")
+           const RangeText = document.getElementById("GuessRangeText")
+           const Scale =  document.getElementById("ScaleText")
+           const Guesses = document.getElementById("Guesses")
+           let lives = 10
+           let Difficulty = 11
+           let TheAnswer = Math.floor(Math.random() * Difficulty);
+
+          
+            function reset() {
+              setTimeout(() => {
+                 lives = 10
+                 TheAnswer = Math.floor(Math.random() * Difficulty);
+                 RangeText.innerText = "pick a number between 0-" + (Difficulty - 1)
+                 Scale.innerText = ""
+                 Guesses.innerText = "Guesses remaining:10"
+                 console.log(TheAnswer)
+
+           }, 1000);
+           }
+
+          function changeDiff(DiffBtn) {
+          var BGSTYLE = getComputedStyle(DiffBtn)
+
+           if (BGSTYLE['background-color'] == "rgb(0, 128, 0)") {
+            Difficulty = 11
+           }
+           if (BGSTYLE['background-color'] == "rgb(255, 165, 0)") {
+            Difficulty = 31
+           }
+           if (BGSTYLE['background-color'] == "rgb(255, 0, 0)") {
+            Difficulty = 101
+           }
+           reset()
+          }
+           
+           function checkguess(event) {
+            const Guess = GuessBox.value
+
+             if (event.key == "Enter") {
+               if (Guess !== "") {
+                if (Guess > Difficulty) {
+                   Scale.innerText = "Guess is greater than range max!"
+                   
+                }else {
+                    if (Guess == TheAnswer) {
+                        GuessBox.value = ""
+                            Scale.innerText = "🎉Congrats you guessed the correct answer in with " + lives + " guesses remaining🎉"
+                            reset()
+                     }
+                    if (Guess > TheAnswer) {
+                        lives -= 1
+                        GuessBox.value = ""
+                            Scale.innerText = "Not quite,less then " + Guess + " !"
+                     }
+                    if (Guess < TheAnswer) {
+
+
+                        lives -= 1
+                        GuessBox.value = ""
+                            Scale.innerText = "Not quite,More then " + Guess + " !"
+                     }
+                    if (lives == 0) {
+                      Scale.innerText = "You lost!Better luck next time!"
+                      reset()
+                }
+                }
+               } else {
+            Scale.innerText = "Please enter your guess!"
+           }
+           }
+           Guesses.innerText = "Guesses remaining:" + lives
+           }
+
+           document.addEventListener("keydown",checkguess)
+    </script>
+</body>
+</html>
+
+ 
